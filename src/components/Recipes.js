@@ -1,38 +1,41 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-import { Link } from "react-router-dom";
+import Form from './Form'
+import Recipe from './Recipe'
 
-const Recipes = props => (
-  <div className="container">
-    <div className="row">
-    { props.recipes.map((recipe) => {
-      return (
-        <div key={recipe.title} className="col-md-4" style={{ marginBottom:"2rem" }}>
-          <div className="recipes__box">
-            <img 
-              className="recipe__box-img" 
-              src={recipe.image_url} 
-              alt={recipe.title}/>
-              <div className="recipe__text">
-                <h5 className="recipes__title">
-                  { recipe.title.length < 20 ? `${recipe.title}` : `${recipe.title.substring(0, 25)}...` }
-                </h5>
-                <p className="recipes__subtitle">Publisher: <span>
-                  { recipe.publisher }
-                </span></p>
-              </div>
-              <button className="recipe_buttons">
-                <Link to={{ 
-                  pathname: `/recipe/${recipe.recipe_id}`,
-                  state: { recipe: recipe.title }
-                }}>View Recipe</Link>
-              </button>
-          </div>
+const API_KEY = "7a8e8fcfa2bf124d9ed561309586dd77";
+
+class Recipes extends Component {
+  state = {
+    recipes : []
+  }
+  getRecipe = async (e) =>  {
+    e.preventDefault();
+    const recipeName = e.target.elements.recipeName.value;
+
+    const api_call = await fetch(`https://www.food2fork.com/api/search?key=${API_KEY}&q=${recipeName}&count=10`)
+    const data = await api_call.json();
+    
+    this.setState({
+      recipes: data.recipes
+    })
+    console.log(this.state.recipes);
+  }
+  render() {
+    return (
+        <div className="recipe-list">
+        <Form getRecipe = {this.getRecipe} />
+      
+        <div className="row">
+        {
+            this.state.recipes.map((recipe) => {
+            return <Recipe recipe = {recipe} key={recipe.recipe_id}/>
+          })
+        }
         </div>
-      );
-    })}
-    </div>
   </div>
-);
+    );
+  }
+}
 
 export default Recipes;
