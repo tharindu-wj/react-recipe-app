@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 
-const Recipe = props => (
+const Recipe = ({recipe}) => (
   <div className="recipe-block col-sm-4">
-  <Link to={{ pathname: `/recipe/${props.recipe.recipe_id}`}}>
+  <Link to={{ pathname: `/recipe/${recipe.recipe_id}`}}>
     <div>
-        <img src={props.recipe.image_url} alt={props.recipe.title}/>
-        <h3>{props.recipe.title}</h3>
+        <img src={recipe.image_url} alt={recipe.title}/>
+        <h3>{recipe.title}</h3>
       </div>
     </Link>
   </div>
